@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-parchment text-ink font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-green-deep;
+  }
+  :focus-visible {
+    outline: 2px solid #1F5C4A;
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: #E9F1EC;
+  }
+}
+
+@layer components {
+  .arabic-text {
+    @apply font-arabic text-2xl leading-loose text-right text-ink;
+    direction: rtl;
+  }
+  .container-site {
+    @apply mx-auto max-w-site px-5 sm:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-green px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-deep focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-deep;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-sage-200 bg-white px-5 py-2.5 text-sm font-semibold text-green-deep transition-colors hover:bg-sage-50;
+  }
+  .btn-whatsapp {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:brightness-95;
+  }
+  .field-label {
+    @apply block text-sm font-medium text-ink mb-1;
+  }
+  .field-input {
+    @apply w-full rounded-md border border-sage-200 bg-white px-3 py-2 text-sm text-ink placeholder:text-ink/40 focus:border-green focus:outline-none focus:ring-1 focus:ring-green;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-sahih {
+    @apply badge bg-green-light text-green-deep;
+  }
+  .badge-hasan {
+    @apply badge bg-gold-light text-gold;
+  }
+  .badge-daif {
+    @apply badge bg-clay/10 text-clay;
+  }
+  .badge-other {
+    @apply badge bg-sage-100 text-ink/70;
+  }
+  .mihrab-divider {
+    @apply relative flex items-center justify-center py-6 text-green/40;
+  }
+}
