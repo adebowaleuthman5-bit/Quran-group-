@@ -1,6 +1,5 @@
 export type ContentStatus = 'draft' | 'published'
 export type QuestionStatus = 'pending' | 'under_review' | 'answered' | 'published' | 'rejected'
-export type HadithGrade = 'Sahih' | 'Hasan' | "Da'if" | 'Other'
 export type AdminRole = 'super_admin' | 'admin'
 
 export interface Profile {
@@ -11,53 +10,11 @@ export interface Profile {
   updated_at: string
 }
 
-export interface QuranPost {
+export interface Post {
   id: string
-  surah_name: string
-  surah_number: number | null
-  verse_number: string
-  arabic_text: string
-  translation: string
-  translation_source: string
-  tafsir: string | null
-  reference: string
-  source_url: string | null
-  status: ContentStatus
-  published_at: string | null
-  created_by: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface HadithPost {
-  id: string
-  arabic_text: string | null
-  translation: string
-  collection: string
-  hadith_number: string | null
-  grade: HadithGrade
-  grader: string | null
-  reference: string
-  source_url: string | null
-  explanation: string | null
-  status: ContentStatus
-  published_at: string | null
-  created_by: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface Dhikr {
-  id: string
-  category: 'morning' | 'evening'
-  arabic_text: string
-  transliteration: string | null
-  translation: string
-  repetitions: number | null
-  reference: string
-  explanation: string | null
-  audio_url: string | null
-  display_order: number
+  title: string
+  body: string
+  image_url: string | null
   status: ContentStatus
   published_at: string | null
   created_by: string | null

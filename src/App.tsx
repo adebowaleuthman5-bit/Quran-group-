@@ -4,9 +4,7 @@ import { AdminLayout } from '@/components/admin/AdminLayout'
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute'
 
 import Home from '@/pages/public/Home'
-import Quran from '@/pages/public/Quran'
-import Hadith from '@/pages/public/Hadith'
-import Adhkar from '@/pages/public/Adhkar'
+import Posts from '@/pages/public/Posts'
 import Lectures from '@/pages/public/Lectures'
 import Questions from '@/pages/public/Questions'
 import QuestionDetail from '@/pages/public/QuestionDetail'
@@ -16,9 +14,7 @@ import NotFound from '@/pages/public/NotFound'
 
 import Login from '@/pages/admin/Login'
 import Dashboard from '@/pages/admin/Dashboard'
-import QuranAdmin from '@/pages/admin/QuranAdmin'
-import HadithAdmin from '@/pages/admin/HadithAdmin'
-import AdhkarAdmin from '@/pages/admin/AdhkarAdmin'
+import PostsAdmin from '@/pages/admin/PostsAdmin'
 import LecturesAdmin from '@/pages/admin/LecturesAdmin'
 import QuestionsAdmin from '@/pages/admin/QuestionsAdmin'
 import ExecutivesAdmin from '@/pages/admin/ExecutivesAdmin'
@@ -33,9 +29,7 @@ export default function App() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/quran" element={<Quran />} />
-        <Route path="/hadith" element={<Hadith />} />
-        <Route path="/adhkar" element={<Adhkar />} />
+        <Route path="/posts" element={<Posts />} />
         <Route path="/lectures" element={<Lectures />} />
         <Route path="/questions" element={<Questions />} />
         <Route path="/questions/:id" element={<QuestionDetail />} />
@@ -55,9 +49,7 @@ export default function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="quran" element={<QuranAdmin />} />
-        <Route path="hadith" element={<HadithAdmin />} />
-        <Route path="adhkar" element={<AdhkarAdmin />} />
+        <Route path="posts" element={<PostsAdmin />} />
         <Route path="lectures" element={<LecturesAdmin />} />
         <Route path="questions" element={<QuestionsAdmin />} />
         <Route path="executives" element={<ExecutivesAdmin />} />

@@ -4,9 +4,7 @@ import { useAuth } from '@/context/AuthContext'
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard' },
-  { to: '/admin/quran', label: "Qur'an" },
-  { to: '/admin/hadith', label: 'Hadith' },
-  { to: '/admin/adhkar', label: 'Adhkar' },
+  { to: '/admin/posts', label: 'Posts' },
   { to: '/admin/lectures', label: 'Lectures' },
   { to: '/admin/questions', label: 'Islamic Questions' },
   { to: '/admin/executives', label: 'Executives' },

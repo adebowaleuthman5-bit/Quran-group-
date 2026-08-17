@@ -4,9 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useAuth } from '@/context/AuthContext'
 
 interface Counts {
-  quran: number
-  hadith: number
-  adhkar: number
+  posts: number
   lectures: number
   pendingQuestions: number
   publishedAnswers: number
@@ -19,19 +17,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function load() {
-      const [quran, hadith, adhkar, lectures, pendingQuestions, publishedAnswers, executives] = await Promise.all([
-        supabase.from('quran_posts').select('id', { count: 'exact', head: true }),
-        supabase.from('hadith_posts').select('id', { count: 'exact', head: true }),
-        supabase.from('adhkar').select('id', { count: 'exact', head: true }),
+      const [posts, lectures, pendingQuestions, publishedAnswers, executives] = await Promise.all([
+        supabase.from('posts').select('id', { count: 'exact', head: true }),
         supabase.from('lectures').select('id', { count: 'exact', head: true }),
         supabase.from('islamic_questions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('question_answers').select('id', { count: 'exact', head: true }).eq('status', 'published'),
         supabase.from('executives').select('id', { count: 'exact', head: true }),
       ])
       setCounts({
-        quran: quran.count ?? 0,
-        hadith: hadith.count ?? 0,
-        adhkar: adhkar.count ?? 0,
+        posts: posts.count ?? 0,
         lectures: lectures.count ?? 0,
         pendingQuestions: pendingQuestions.count ?? 0,
         publishedAnswers: publishedAnswers.count ?? 0,
@@ -42,9 +36,7 @@ export default function Dashboard() {
   }, [])
 
   const cards = [
-    { label: "Qur'an Posts", value: counts?.quran, to: '/admin/quran' },
-    { label: 'Hadith Posts', value: counts?.hadith, to: '/admin/hadith' },
-    { label: 'Adhkar', value: counts?.adhkar, to: '/admin/adhkar' },
+    { label: 'Posts', value: counts?.posts, to: '/admin/posts' },
     { label: 'Lectures', value: counts?.lectures, to: '/admin/lectures' },
     { label: 'Pending Questions', value: counts?.pendingQuestions, to: '/admin/questions' },
     { label: 'Published Answers', value: counts?.publishedAnswers, to: '/admin/questions' },

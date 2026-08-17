@@ -20,9 +20,7 @@ export function Footer() {
         <div>
           <p className="font-display text-sm font-semibold text-green-deep">Explore</p>
           <ul className="mt-3 space-y-2 text-sm text-ink/70">
-            <li><Link to="/quran" className="hover:text-green">Qur'an</Link></li>
-            <li><Link to="/hadith" className="hover:text-green">Hadith</Link></li>
-            <li><Link to="/adhkar" className="hover:text-green">Adhkar</Link></li>
+            <li><Link to="/posts" className="hover:text-green">Posts</Link></li>
             <li><Link to="/lectures" className="hover:text-green">Lectures</Link></li>
             <li><Link to="/questions" className="hover:text-green">Ask a Question</Link></li>
           </ul>
