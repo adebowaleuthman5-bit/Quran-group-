@@ -4,7 +4,11 @@ import { NavLink } from 'react-router-dom'
 const links = [
   { to: '/', label: 'Home' },
   { to: '/posts', label: 'Posts' },
+  { to: '/quizzes', label: 'Quizzes' },
   { to: '/lectures', label: 'Lectures' },
+  { to: '/resources', label: 'Resources' },
+  { to: '/prayer-times', label: 'Prayer Times' },
+  { to: '/search', label: 'Search' },
   { to: '/questions', label: 'Questions' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
@@ -24,14 +28,14 @@ export function Navbar() {
           </span>
         </NavLink>
 
-        <nav className="hidden lg:flex lg:items-center lg:gap-1">
+        <nav className="hidden lg:flex lg:flex-wrap lg:items-center lg:justify-end lg:gap-0.5">
           {links.map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
               end={l.to === '/'}
               className={({ isActive }) =>
-                `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                `rounded-md px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors ${
                   isActive ? 'bg-green-light text-green-deep' : 'text-ink/70 hover:bg-sage-50 hover:text-ink'
                 }`
               }
@@ -39,9 +43,6 @@ export function Navbar() {
               {l.label}
             </NavLink>
           ))}
-          <NavLink to="/admin/login" className="ml-2 rounded-md border border-sage-200 px-3 py-2 text-sm font-medium text-ink/60 hover:bg-sage-50">
-            Admin Login
-          </NavLink>
         </nav>
 
         <button
@@ -72,9 +73,6 @@ export function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <NavLink to="/admin/login" onClick={() => setOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-ink/50">
-              Admin Login
-            </NavLink>
           </div>
         </nav>
       )}

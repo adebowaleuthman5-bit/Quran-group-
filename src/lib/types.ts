@@ -29,6 +29,7 @@ export interface Lecture {
   speaker_info: string | null
   lecture_date: string | null
   lecture_time: string | null
+  lecture_datetime: string | null
   description: string | null
   recording_url: string | null
   poster_url: string | null
@@ -124,5 +125,44 @@ export interface SiteSettings {
   site_name: string
   intro_text: string | null
   about_text: string | null
+  updated_at: string
+}
+
+export interface Quiz {
+  id: string
+  title: string
+  description: string | null
+  status: ContentStatus
+  published_at: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type QuizOption = 'a' | 'b' | 'c' | 'd'
+
+export interface QuizQuestion {
+  id: string
+  quiz_id: string
+  question_text: string
+  option_a: string
+  option_b: string
+  option_c: string
+  option_d: string
+  correct_option: QuizOption
+  display_order: number
+  created_at: string
+}
+
+export interface Resource {
+  id: string
+  title: string
+  description: string | null
+  file_url: string
+  file_name: string
+  status: ContentStatus
+  published_at: string | null
+  created_by: string | null
+  created_at: string
   updated_at: string
 }

@@ -1,8 +1,3 @@
-/**
- * Signature motif: a single-line arch, echoing the mihrab niche and the
- * podium arch in the group's own logo. Used sparingly as a section divider
- * instead of a generic rule or icon.
- */
 export function MihrabDivider() {
   return (
     <div className="mihrab-divider" role="presentation" aria-hidden="true">

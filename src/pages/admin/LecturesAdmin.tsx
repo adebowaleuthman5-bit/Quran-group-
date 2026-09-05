@@ -6,8 +6,8 @@ import { StatusPill } from '@/components/admin/StatusPill'
 import type { Lecture } from '@/lib/types'
 
 const empty = {
-  topic: '', speaker: '', speaker_info: '', lecture_date: '', lecture_time: '', description: '',
-  recording_url: '', poster_url: '', test_info: '', lecture_status: 'upcoming' as 'upcoming' | 'completed',
+  topic: '', speaker: '', speaker_info: '', lecture_date: '', lecture_time: '', lecture_datetime: '',
+  description: '', recording_url: '', poster_url: '', test_info: '', lecture_status: 'upcoming' as 'upcoming' | 'completed',
 }
 
 export default function LecturesAdmin() {
@@ -37,7 +37,9 @@ export default function LecturesAdmin() {
     setEditing(l)
     setForm({
       topic: l.topic, speaker: l.speaker, speaker_info: l.speaker_info ?? '', lecture_date: l.lecture_date ?? '',
-      lecture_time: l.lecture_time ?? '', description: l.description ?? '', recording_url: l.recording_url ?? '',
+      lecture_time: l.lecture_time ?? '',
+      lecture_datetime: l.lecture_datetime ? l.lecture_datetime.slice(0, 16) : '',
+      description: l.description ?? '', recording_url: l.recording_url ?? '',
       poster_url: l.poster_url ?? '', test_info: l.test_info ?? '', lecture_status: l.lecture_status,
     })
     setSaveError(null); setShowForm(true)
@@ -54,6 +56,7 @@ export default function LecturesAdmin() {
     const payload: any = {
       topic: form.topic, speaker: form.speaker, speaker_info: form.speaker_info || null,
       lecture_date: form.lecture_date || null, lecture_time: form.lecture_time || null,
+      lecture_datetime: form.lecture_datetime ? new Date(form.lecture_datetime).toISOString() : null,
       description: form.description || null, recording_url: form.recording_url || null,
       poster_url: form.poster_url || null, test_info: form.test_info || null, lecture_status: form.lecture_status,
     }
@@ -114,13 +117,23 @@ export default function LecturesAdmin() {
             <label className="field-label">Speaker Info (optional)</label>
             <input className="field-input" value={form.speaker_info} onChange={(e) => setForm({ ...form, speaker_info: e.target.value })} />
           </div>
+          <div>
+            <label className="field-label">Exact Date &amp; Time (powers the countdown timer)</label>
+            <input
+              type="datetime-local"
+              className="field-input"
+              value={form.lecture_datetime}
+              onChange={(e) => setForm({ ...form, lecture_datetime: e.target.value })}
+            />
+            <p className="mt-1 text-xs text-ink/40">Leave blank if you don't want a countdown shown for this lecture.</p>
+          </div>
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
-              <label className="field-label">Date</label>
-              <input type="date" className="field-input" value={form.lecture_date} onChange={(e) => setForm({ ...form, lecture_date: e.target.value })} />
+              <label className="field-label">Display Date (optional text)</label>
+              <input className="field-input" placeholder="e.g. Friday 22nd" value={form.lecture_date} onChange={(e) => setForm({ ...form, lecture_date: e.target.value })} />
             </div>
             <div>
-              <label className="field-label">Time</label>
+              <label className="field-label">Display Time (optional text)</label>
               <input className="field-input" placeholder="e.g. 8:00 PM" value={form.lecture_time} onChange={(e) => setForm({ ...form, lecture_time: e.target.value })} />
             </div>
             <div>

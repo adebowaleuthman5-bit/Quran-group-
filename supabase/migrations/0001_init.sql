@@ -17,70 +17,6 @@ create table if not exists profiles (
 );
 
 -- ------------------------------------------------------------
--- quran_posts
--- ------------------------------------------------------------
-create table if not exists quran_posts (
-  id uuid primary key default gen_random_uuid(),
-  surah_name text not null,
-  surah_number int,
-  verse_number text not null,
-  arabic_text text not null,
-  translation text not null,
-  translation_source text not null,
-  tafsir text,
-  reference text not null,
-  source_url text,
-  status text not null default 'draft' check (status in ('draft', 'published')),
-  published_at timestamptz,
-  created_by uuid references profiles(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- ------------------------------------------------------------
--- hadith_posts
--- ------------------------------------------------------------
-create table if not exists hadith_posts (
-  id uuid primary key default gen_random_uuid(),
-  arabic_text text,
-  translation text not null,
-  collection text not null,
-  hadith_number text,
-  grade text not null check (grade in ('Sahih', 'Hasan', 'Da''if', 'Other')),
-  grader text,
-  reference text not null,
-  source_url text,
-  explanation text,
-  status text not null default 'draft' check (status in ('draft', 'published')),
-  published_at timestamptz,
-  created_by uuid references profiles(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  constraint hadith_requires_reference check (reference is not null and length(trim(reference)) > 0)
-);
-
--- ------------------------------------------------------------
--- adhkar
--- ------------------------------------------------------------
-create table if not exists adhkar (
-  id uuid primary key default gen_random_uuid(),
-  category text not null check (category in ('morning', 'evening')),
-  arabic_text text not null,
-  transliteration text,
-  translation text not null,
-  repetitions int default 1,
-  reference text not null,
-  explanation text,
-  audio_url text,
-  display_order int default 0,
-  status text not null default 'draft' check (status in ('draft', 'published')),
-  published_at timestamptz,
-  created_by uuid references profiles(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- ------------------------------------------------------------
 -- lectures
 -- ------------------------------------------------------------
 create table if not exists lectures (
@@ -244,9 +180,6 @@ where not exists (select 1 from founder);
 -- Row Level Security
 -- ============================================================
 alter table profiles enable row level security;
-alter table quran_posts enable row level security;
-alter table hadith_posts enable row level security;
-alter table adhkar enable row level security;
 alter table lectures enable row level security;
 alter table islamic_questions enable row level security;
 alter table question_answers enable row level security;
@@ -269,50 +202,11 @@ as $$
   );
 $$;
 
--- profiles: admins can read all profiles; a user can read their own row.
--- Only managed by Super Admin via Supabase dashboard / service role for inserts.
 create policy "profiles_select_own_or_admin" on profiles
   for select using (auth.uid() = id or is_admin());
 create policy "profiles_update_own" on profiles
   for update using (auth.uid() = id);
 
--- quran_posts: public can read published; admins can do everything
-create policy "quran_public_read_published" on quran_posts
-  for select using (status = 'published');
-create policy "quran_admin_read_all" on quran_posts
-  for select using (is_admin());
-create policy "quran_admin_write" on quran_posts
-  for insert with check (is_admin());
-create policy "quran_admin_update" on quran_posts
-  for update using (is_admin());
-create policy "quran_admin_delete" on quran_posts
-  for delete using (is_admin());
-
--- hadith_posts
-create policy "hadith_public_read_published" on hadith_posts
-  for select using (status = 'published');
-create policy "hadith_admin_read_all" on hadith_posts
-  for select using (is_admin());
-create policy "hadith_admin_write" on hadith_posts
-  for insert with check (is_admin());
-create policy "hadith_admin_update" on hadith_posts
-  for update using (is_admin());
-create policy "hadith_admin_delete" on hadith_posts
-  for delete using (is_admin());
-
--- adhkar
-create policy "adhkar_public_read_published" on adhkar
-  for select using (status = 'published');
-create policy "adhkar_admin_read_all" on adhkar
-  for select using (is_admin());
-create policy "adhkar_admin_write" on adhkar
-  for insert with check (is_admin());
-create policy "adhkar_admin_update" on adhkar
-  for update using (is_admin());
-create policy "adhkar_admin_delete" on adhkar
-  for delete using (is_admin());
-
--- lectures
 create policy "lectures_public_read_published" on lectures
   for select using (status = 'published');
 create policy "lectures_admin_read_all" on lectures
@@ -324,8 +218,6 @@ create policy "lectures_admin_update" on lectures
 create policy "lectures_admin_delete" on lectures
   for delete using (is_admin());
 
--- islamic_questions: anyone can submit (insert); only admins can read/manage.
--- Submitters cannot read back questions (protects contact info of all submitters).
 create policy "questions_public_insert" on islamic_questions
   for insert with check (true);
 create policy "questions_admin_read" on islamic_questions
@@ -335,8 +227,6 @@ create policy "questions_admin_update" on islamic_questions
 create policy "questions_admin_delete" on islamic_questions
   for delete using (is_admin());
 
--- question_answers: public can read only answers whose status is published
--- (and only alongside a question, via the app query); admins manage all.
 create policy "answers_public_read_published" on question_answers
   for select using (status = 'published');
 create policy "answers_admin_read_all" on question_answers
@@ -348,7 +238,6 @@ create policy "answers_admin_update" on question_answers
 create policy "answers_admin_delete" on question_answers
   for delete using (is_admin());
 
--- executives: public can read active; admins manage all
 create policy "executives_public_read_active" on executives
   for select using (active = true);
 create policy "executives_admin_read_all" on executives
@@ -360,7 +249,6 @@ create policy "executives_admin_update" on executives
 create policy "executives_admin_delete" on executives
   for delete using (is_admin());
 
--- founder: public read, admin write
 create policy "founder_public_read" on founder
   for select using (true);
 create policy "founder_admin_update" on founder
@@ -368,13 +256,11 @@ create policy "founder_admin_update" on founder
 create policy "founder_admin_insert" on founder
   for insert with check (is_admin());
 
--- group_information: public read, admin write
 create policy "group_info_public_read" on group_information
   for select using (true);
 create policy "group_info_admin_update" on group_information
   for update using (is_admin());
 
--- group_rules: public read active, admin manages all
 create policy "rules_public_read_active" on group_rules
   for select using (active = true);
 create policy "rules_admin_read_all" on group_rules
@@ -386,20 +272,18 @@ create policy "rules_admin_update" on group_rules
 create policy "rules_admin_delete" on group_rules
   for delete using (is_admin());
 
--- social_links: public read, only super_admin updates (checked in app layer too)
 create policy "social_public_read" on social_links
   for select using (true);
 create policy "social_admin_update" on social_links
   for update using (is_admin());
 
--- site_settings: public read, admin write
 create policy "settings_public_read" on site_settings
   for select using (true);
 create policy "settings_admin_update" on site_settings
   for update using (is_admin());
 
 -- ============================================================
--- Storage buckets (run once — safe to re-run)
+-- Storage buckets
 -- ============================================================
 insert into storage.buckets (id, name, public)
 values ('site-media', 'site-media', true)

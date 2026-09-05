@@ -2,16 +2,27 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { Loading, EmptyState, ErrorState } from '@/components/ui/States'
 import { MihrabDivider } from '@/components/ui/MihrabDivider'
+import { LectureCountdown } from '@/components/ui/LectureCountdown'
 import type { Lecture } from '@/lib/types'
 
 export default function Lectures() {
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed'>('all')
   const [lectures, setLectures] = useState<Lecture[]>([])
+  const [nextLecture, setNextLecture] = useState<Lecture | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     document.title = 'Lectures | Quran Recitation and Lectures Group'
+  }, [])
+
+  useEffect(() => {
+    let query = supabase.from('lectures').select('*').eq('status', 'published').eq('lecture_status', 'upcoming').order('lecture_datetime', { ascending: true }).limit(1)
+    query.then(({ data }) => {
+      const rows = (data as Lecture[]) ?? []
+      const upcoming = rows.find((l) => l.lecture_datetime && new Date(l.lecture_datetime).getTime() > Date.now())
+      setNextLecture(upcoming ?? null)
+    })
   }, [])
 
   useEffect(() => {
@@ -33,7 +44,13 @@ export default function Lectures() {
         <p className="mt-2 text-ink/60">Beneficial lectures delivered through WhatsApp voice notes and recordings.</p>
       </header>
 
-      <div className="mx-auto mt-6 flex max-w-sm rounded-md border border-sage-200 bg-white p-1">
+      {nextLecture && (
+        <div className="mx-auto mt-8 max-w-sm">
+          <LectureCountdown lecture={nextLecture} />
+        </div>
+      )}
+
+      <div className="mx-auto mt-8 flex max-w-sm rounded-md border border-sage-200 bg-white p-1">
         {(['all', 'upcoming', 'completed'] as const).map((f) => (
           <button
             key={f}

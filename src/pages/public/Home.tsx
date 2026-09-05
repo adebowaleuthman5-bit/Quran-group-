@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { useSocialLinks, useSiteSettings } from '@/lib/hooks'
 import { MihrabDivider } from '@/components/ui/MihrabDivider'
 import { ShareButton } from '@/components/ui/ShareButton'
+import { LectureCountdown } from '@/components/ui/LectureCountdown'
 import { Loading } from '@/components/ui/States'
 import type { Post, Lecture, Executive } from '@/lib/types'
 
@@ -13,18 +14,23 @@ export default function Home() {
 
   const [posts, setPosts] = useState<Post[]>([])
   const [lecture, setLecture] = useState<Lecture | null>(null)
+  const [nextLecture, setNextLecture] = useState<Lecture | null>(null)
   const [executives, setExecutives] = useState<Executive[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      const [p, l, e] = await Promise.all([
+      const [p, l, upcoming, e] = await Promise.all([
         supabase.from('posts').select('*').eq('status', 'published').order('published_at', { ascending: false }).limit(3),
         supabase.from('lectures').select('*').eq('status', 'published').order('published_at', { ascending: false }).limit(1).maybeSingle(),
+        supabase.from('lectures').select('*').eq('status', 'published').eq('lecture_status', 'upcoming').order('lecture_datetime', { ascending: true }).limit(1),
         supabase.from('executives').select('*').eq('active', true).order('display_order', { ascending: true }).limit(3),
       ])
       setPosts((p.data as Post[]) ?? [])
       setLecture(l.data as Lecture | null)
+      const upcomingRows = (upcoming.data as Lecture[]) ?? []
+      const futureLecture = upcomingRows.find((row) => row.lecture_datetime && new Date(row.lecture_datetime).getTime() > Date.now())
+      setNextLecture(futureLecture ?? null)
       setExecutives((e.data as Executive[]) ?? [])
       setLoading(false)
     }
@@ -55,6 +61,12 @@ export default function Home() {
       </section>
 
       <div className="container-site py-12">
+        {nextLecture && (
+          <div className="mx-auto mb-12 max-w-sm">
+            <LectureCountdown lecture={nextLecture} />
+          </div>
+        )}
+
         {loading ? (
           <Loading label="Loading latest posts…" />
         ) : (

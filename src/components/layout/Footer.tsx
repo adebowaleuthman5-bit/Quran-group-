@@ -21,7 +21,10 @@ export function Footer() {
           <p className="font-display text-sm font-semibold text-green-deep">Explore</p>
           <ul className="mt-3 space-y-2 text-sm text-ink/70">
             <li><Link to="/posts" className="hover:text-green">Posts</Link></li>
+            <li><Link to="/quizzes" className="hover:text-green">Quizzes</Link></li>
             <li><Link to="/lectures" className="hover:text-green">Lectures</Link></li>
+            <li><Link to="/resources" className="hover:text-green">Resource Library</Link></li>
+            <li><Link to="/prayer-times" className="hover:text-green">Prayer Times</Link></li>
             <li><Link to="/questions" className="hover:text-green">Ask a Question</Link></li>
           </ul>
         </div>
@@ -44,9 +47,8 @@ export function Footer() {
       </div>
 
       <div className="border-t border-sage-100 py-5">
-        <div className="container-site flex flex-col items-center justify-between gap-2 text-xs text-ink/50 sm:flex-row">
+        <div className="container-site text-center text-xs text-ink/50">
           <p>&copy; {new Date().getFullYear()} Quran Recitation and Lectures Group. All rights reserved.</p>
-          <Link to="/admin/login" className="hover:text-ink/70">Admin Login</Link>
         </div>
       </div>
     </footer>

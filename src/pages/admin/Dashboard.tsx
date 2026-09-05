@@ -5,7 +5,9 @@ import { useAuth } from '@/context/AuthContext'
 
 interface Counts {
   posts: number
+  quizzes: number
   lectures: number
+  resources: number
   pendingQuestions: number
   publishedAnswers: number
   executives: number
@@ -17,16 +19,20 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function load() {
-      const [posts, lectures, pendingQuestions, publishedAnswers, executives] = await Promise.all([
+      const [posts, quizzes, lectures, resources, pendingQuestions, publishedAnswers, executives] = await Promise.all([
         supabase.from('posts').select('id', { count: 'exact', head: true }),
+        supabase.from('quizzes').select('id', { count: 'exact', head: true }),
         supabase.from('lectures').select('id', { count: 'exact', head: true }),
+        supabase.from('resources').select('id', { count: 'exact', head: true }),
         supabase.from('islamic_questions').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
         supabase.from('question_answers').select('id', { count: 'exact', head: true }).eq('status', 'published'),
         supabase.from('executives').select('id', { count: 'exact', head: true }),
       ])
       setCounts({
         posts: posts.count ?? 0,
+        quizzes: quizzes.count ?? 0,
         lectures: lectures.count ?? 0,
+        resources: resources.count ?? 0,
         pendingQuestions: pendingQuestions.count ?? 0,
         publishedAnswers: publishedAnswers.count ?? 0,
         executives: executives.count ?? 0,
@@ -37,7 +43,9 @@ export default function Dashboard() {
 
   const cards = [
     { label: 'Posts', value: counts?.posts, to: '/admin/posts' },
+    { label: 'Quizzes', value: counts?.quizzes, to: '/admin/quizzes' },
     { label: 'Lectures', value: counts?.lectures, to: '/admin/lectures' },
+    { label: 'Resources', value: counts?.resources, to: '/admin/resources' },
     { label: 'Pending Questions', value: counts?.pendingQuestions, to: '/admin/questions' },
     { label: 'Published Answers', value: counts?.publishedAnswers, to: '/admin/questions' },
     { label: 'Executives', value: counts?.executives, to: '/admin/executives' },

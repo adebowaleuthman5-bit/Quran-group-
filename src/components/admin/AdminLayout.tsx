@@ -5,7 +5,9 @@ import { useAuth } from '@/context/AuthContext'
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard' },
   { to: '/admin/posts', label: 'Posts' },
+  { to: '/admin/quizzes', label: 'Quizzes' },
   { to: '/admin/lectures', label: 'Lectures' },
+  { to: '/admin/resources', label: 'Resource Library' },
   { to: '/admin/questions', label: 'Islamic Questions' },
   { to: '/admin/executives', label: 'Executives' },
   { to: '/admin/founder', label: 'Founder' },
@@ -21,7 +23,6 @@ export function AdminLayout() {
 
   return (
     <div className="flex min-h-screen bg-sage-50">
-      {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-sage-100 bg-white px-4 lg:hidden">
         <span className="font-display text-sm font-semibold text-green-deep">Admin Dashboard</span>
         <button onClick={() => setOpen((v) => !v)} aria-label="Toggle menu" className="text-green-deep">
