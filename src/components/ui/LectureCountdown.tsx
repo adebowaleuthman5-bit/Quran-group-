@@ -27,6 +27,7 @@ export function LectureCountdown({ lecture }: { lecture: Lecture }) {
   if (!targetMs || !parts || parts.done) return null
 
   async function handleRemindMe() {
+    if (targetMs === null) return
     if (!('Notification' in window)) {
       setReminderMessage("Your browser doesn't support notifications.")
       return
@@ -48,7 +49,7 @@ export function LectureCountdown({ lecture }: { lecture: Lecture }) {
   }
 
   return (
-    <div className="rounded-lg border border-sage-100 bg-white p-6 text-center shadow-subtle">
+    <div className="rounded-lg border border-sage-100 bg-surface p-6 text-center shadow-subtle">
       <p className="text-xs font-medium uppercase tracking-wide text-ink/40">Next Lecture</p>
       <p className="mt-1 font-display text-lg text-green-deep">{lecture.topic}</p>
       <div className="mt-4 flex justify-center gap-4 sm:gap-6">
@@ -74,3 +75,4 @@ export function LectureCountdown({ lecture }: { lecture: Lecture }) {
     </div>
   )
 }
+
