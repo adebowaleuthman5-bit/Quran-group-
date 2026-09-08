@@ -4,17 +4,12 @@ import { AdminLayout } from '@/components/admin/AdminLayout'
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute'
 
 import Home from '@/pages/public/Home'
-import Posts from '@/pages/public/Posts'
-import Quizzes from '@/pages/public/Quizzes'
-import QuizTake from '@/pages/public/QuizTake'
-import Lectures from '@/pages/public/Lectures'
-import Resources from '@/pages/public/Resources'
-import PrayerTimes from '@/pages/public/PrayerTimes'
-import Search from '@/pages/public/Search'
-import Questions from '@/pages/public/Questions'
+import DailyPrayer from '@/pages/public/DailyPrayer'
+import QA from '@/pages/public/QA'
 import QuestionDetail from '@/pages/public/QuestionDetail'
+import LectureDetail from '@/pages/public/LectureDetail'
+import QuizTake from '@/pages/public/QuizTake'
 import About from '@/pages/public/About'
-import Contact from '@/pages/public/Contact'
 import NotFound from '@/pages/public/NotFound'
 
 import Login from '@/pages/admin/Login'
@@ -36,17 +31,14 @@ export default function App() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/quizzes" element={<Quizzes />} />
-        <Route path="/quizzes/:id" element={<QuizTake />} />
-        <Route path="/lectures" element={<Lectures />} />
-        <Route path="/resources" element={<Resources />} />
-        <Route path="/prayer-times" element={<PrayerTimes />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/questions" element={<Questions />} />
-        <Route path="/questions/:id" element={<QuestionDetail />} />
+        <Route path="/daily-prayer" element={<DailyPrayer />} />
+        <Route path="/qa" element={<QA />} />
         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+
+        {/* Unlisted, shareable detail pages — not in the main menu */}
+        <Route path="/questions/:id" element={<QuestionDetail />} />
+        <Route path="/lectures/:id" element={<LectureDetail />} />
+        <Route path="/quizzes/:id" element={<QuizTake />} />
       </Route>
 
       <Route path="/admin/login" element={<Login />} />

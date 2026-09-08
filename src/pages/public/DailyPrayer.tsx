@@ -7,14 +7,31 @@ interface PrayerRow {
   time: Date
 }
 
-export default function PrayerTimes() {
+function formatHijri(date: Date) {
+  try {
+    return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date)
+  } catch {
+    return null
+  }
+}
+
+export default function DailyPrayer() {
   const [status, setStatus] = useState<'idle' | 'locating' | 'ready' | 'denied' | 'unsupported'>('idle')
   const [prayers, setPrayers] = useState<PrayerRow[]>([])
+  const [sunrise, setSunrise] = useState<Date | null>(null)
   const [remindedFor, setRemindedFor] = useState<Set<string>>(new Set())
   const [reminderMessage, setReminderMessage] = useState<string | null>(null)
 
+  const today = new Date()
+  const hijriDate = formatHijri(today)
+  const gregorianDate = today.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+
   useEffect(() => {
-    document.title = 'Prayer Times | Quran Recitation and Lectures Group'
+    document.title = 'Daily Prayer | Quran Recitation and Lectures Group'
   }, [])
 
   function requestLocation() {
@@ -28,11 +45,12 @@ export default function PrayerTimes() {
         const coordinates = new Coordinates(position.coords.latitude, position.coords.longitude)
         const params = CalculationMethod.MuslimWorldLeague()
         const times = new AdhanPrayerTimes(coordinates, new Date(), params)
+        setSunrise(times.sunrise)
         setPrayers([
           { name: 'Fajr', time: times.fajr },
           { name: 'Dhuhr', time: times.dhuhr },
           { name: 'Asr', time: times.asr },
-          { name: 'Maghrib', time: times.maghrib },
+          { name: 'Maghrib (Sunset)', time: times.maghrib },
           { name: 'Isha', time: times.isha },
         ])
         setStatus('ready')
@@ -70,11 +88,14 @@ export default function PrayerTimes() {
   return (
     <div className="container-site py-12">
       <header className="mx-auto max-w-prose text-center">
-        <h1 className="text-2xl">Prayer Times</h1>
-        <p className="mt-2 text-ink/60">Today's prayer times, calculated from your current location.</p>
+        <h1 className="text-2xl">Daily Prayer</h1>
+        <p className="mt-2 text-ink/60">
+          {gregorianDate}
+          {hijriDate ? ` · ${hijriDate} AH` : ''}
+        </p>
       </header>
 
-      <div className="mx-auto mt-10 max-w-sm">
+      <div className="mx-auto mt-8 max-w-sm">
         {status === 'idle' || status === 'locating' ? (
           <Loading label="Finding your location…" />
         ) : status === 'unsupported' ? (
@@ -85,28 +106,39 @@ export default function PrayerTimes() {
             <button onClick={requestLocation} className="btn-secondary mt-4">Try again</button>
           </div>
         ) : (
-          <div className="space-y-3">
-            {prayers.map((p) => {
-              const isPast = p.time.getTime() < Date.now()
-              return (
-                <div key={p.name} className="flex items-center justify-between rounded-lg border border-sage-100 bg-white p-4 shadow-subtle">
-                  <div>
-                    <p className="font-display text-base text-green-deep">{p.name}</p>
-                    <p className="text-sm text-ink/60">{p.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+          <>
+            {sunrise && (
+              <div className="mb-4 flex items-center justify-between rounded-lg border border-gold/30 bg-gold-light p-4">
+                <p className="font-display text-base text-green-deep">Sunrise</p>
+                <p className="text-sm text-ink/70">{sunrise.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              </div>
+            )}
+            <div className="space-y-3">
+              {prayers.map((p) => {
+                const isPast = p.time.getTime() < Date.now()
+                return (
+                  <div key={p.name} className="flex items-center justify-between rounded-lg border border-sage-100 bg-surface p-4 shadow-subtle">
+                    <div>
+                      <p className="font-display text-base text-green-deep">{p.name}</p>
+                      <p className="text-sm text-ink/60">{p.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    </div>
+                    <button
+                      onClick={() => handleRemind(p)}
+                      disabled={isPast || remindedFor.has(p.name)}
+                      className="btn-secondary !px-3 !py-1.5 text-xs disabled:opacity-50"
+                    >
+                      {remindedFor.has(p.name) ? 'Reminder set' : isPast ? 'Passed' : 'Remind Me'}
+                    </button>
                   </div>
-                  <button
-                    onClick={() => handleRemind(p)}
-                    disabled={isPast || remindedFor.has(p.name)}
-                    className="btn-secondary !px-3 !py-1.5 text-xs disabled:opacity-50"
-                  >
-                    {remindedFor.has(p.name) ? 'Reminder set' : isPast ? 'Passed' : 'Remind Me'}
-                  </button>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
+          </>
         )}
         {reminderMessage && <p className="mt-4 text-center text-xs text-ink/50">{reminderMessage}</p>}
+        <p className="mt-6 text-center text-xs text-ink/40">
+          Reminders currently work while this page stays open in your browser. Real device notifications are coming soon.
+        </p>
       </div>
     </div>
   )

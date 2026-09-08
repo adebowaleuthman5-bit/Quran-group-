@@ -49,7 +49,7 @@ export default function SocialLinksAdmin() {
         The Executive WhatsApp link is never shown to ordinary visitors — keep it here for internal reference only.
       </p>
 
-      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
         <div>
           <label className="field-label">General WhatsApp Group Link *</label>
           <input className="field-input" value={form.whatsapp_general} onChange={(e) => setForm({ ...form, whatsapp_general: e.target.value })} />

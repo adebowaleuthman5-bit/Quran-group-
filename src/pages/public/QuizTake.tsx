@@ -41,7 +41,7 @@ export default function QuizTake() {
       <div className="container-site py-12">
         <EmptyState title="This quiz isn't available" description="It may not be published yet, or the link may be incorrect." />
         <div className="mt-6 text-center">
-          <Link to="/quizzes" className="text-sm font-medium text-green hover:underline">← Back to Quizzes</Link>
+          <Link to="/" className="text-sm font-medium text-green hover:underline">← Back to Home</Link>
         </div>
       </div>
     )
@@ -50,13 +50,13 @@ export default function QuizTake() {
   return (
     <div className="container-site py-12">
       <div className="mx-auto max-w-prose">
-        <Link to="/quizzes" className="text-sm font-medium text-green hover:underline">← Back to Quizzes</Link>
+        <Link to="/" className="text-sm font-medium text-green hover:underline">← Back to Home</Link>
 
         <h1 className="mt-4 text-xl">{quiz.title}</h1>
         {quiz.description && <p className="mt-2 text-ink/60">{quiz.description}</p>}
 
         {submitted ? (
-          <div className="mt-8 rounded-lg border border-sage-100 bg-white p-8 text-center shadow-subtle">
+          <div className="mt-8 rounded-lg border border-sage-100 bg-surface p-8 text-center shadow-subtle">
             <p className="text-sm font-medium uppercase tracking-wide text-ink/40">Your Score</p>
             <p className="mt-2 font-display text-4xl font-semibold text-green-deep">{score} / {questions.length}</p>
             <button
@@ -69,7 +69,7 @@ export default function QuizTake() {
         ) : (
           <div className="mt-8 space-y-8">
             {questions.map((q, i) => (
-              <div key={q.id} className="rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+              <div key={q.id} className="rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
                 <p className="font-medium text-ink">{i + 1}. {q.question_text}</p>
                 <div className="mt-4 space-y-2">
                   {(['a', 'b', 'c', 'd'] as const).map((letter) => (

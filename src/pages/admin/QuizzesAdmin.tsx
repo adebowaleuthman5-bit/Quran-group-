@@ -162,7 +162,7 @@ export default function QuizzesAdmin() {
       </div>
 
       {showForm && (
-        <form className="mt-6 space-y-6 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
+        <form className="mt-6 space-y-6 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
           <h2 className="font-display text-lg text-green-deep">{editing ? 'Edit Quiz' : 'New Quiz'}</h2>
 
           <div>
@@ -228,7 +228,7 @@ export default function QuizzesAdmin() {
         {loading ? <Loading /> : quizzes.length === 0 ? (
           <EmptyState title="No quizzes yet" description="Create your first quiz above." />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-white">
+          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-surface">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-sage-100 bg-sage-50 text-xs uppercase text-ink/50">
                 <tr>

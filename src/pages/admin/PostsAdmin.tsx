@@ -3,9 +3,9 @@ import { supabase } from '@/lib/supabaseClient'
 import { useAuth } from '@/context/AuthContext'
 import { Loading, EmptyState } from '@/components/ui/States'
 import { StatusPill } from '@/components/admin/StatusPill'
-import type { Post } from '@/lib/types'
+import type { Post, PostCategory } from '@/lib/types'
 
-const empty = { title: '', body: '', image_url: '' }
+const empty = { title: '', body: '', image_url: '', category: 'post' as PostCategory }
 
 export default function PostsAdmin() {
   const { profile } = useAuth()
@@ -37,7 +37,7 @@ export default function PostsAdmin() {
 
   function startEdit(p: Post) {
     setEditing(p)
-    setForm({ title: p.title, body: p.body, image_url: p.image_url ?? '' })
+    setForm({ title: p.title, body: p.body, image_url: p.image_url ?? '', category: p.category })
     setSaveError(null)
     setShowForm(true)
   }
@@ -71,6 +71,7 @@ export default function PostsAdmin() {
       title: form.title,
       body: form.body,
       image_url: form.image_url || null,
+      category: form.category,
     }
     if (publish !== undefined) {
       payload.status = publish ? 'published' : 'draft'
@@ -118,12 +119,26 @@ export default function PostsAdmin() {
       </div>
 
       {showForm && (
-        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
+        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
           <h2 className="font-display text-lg text-green-deep">{editing ? 'Edit Post' : 'New Post'}</h2>
 
           <div>
             <label className="field-label">Title *</label>
             <input className="field-input" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          </div>
+
+          <div>
+            <label className="field-label">Category *</label>
+            <select
+              className="field-input"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value as PostCategory })}
+            >
+              <option value="post">Daily Post (general)</option>
+              <option value="verse">Today's Verse</option>
+              <option value="dua">Daily Dua</option>
+              <option value="adhkar">Daily Adhkar</option>
+            </select>
           </div>
 
           <div>
@@ -168,11 +183,12 @@ export default function PostsAdmin() {
         {loading ? <Loading /> : posts.length === 0 ? (
           <EmptyState title="No posts yet" description="Create your first post above." />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-white">
+          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-surface">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-sage-100 bg-sage-50 text-xs uppercase text-ink/50">
                 <tr>
                   <th className="px-4 py-3">Title</th>
+                  <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Updated</th>
                   <th className="px-4 py-3 text-right">Actions</th>
@@ -182,6 +198,7 @@ export default function PostsAdmin() {
                 {posts.map((p) => (
                   <tr key={p.id}>
                     <td className="px-4 py-3 font-medium">{p.title}</td>
+                    <td className="px-4 py-3 capitalize text-ink/60">{p.category}</td>
                     <td className="px-4 py-3"><StatusPill status={p.status} /></td>
                     <td className="px-4 py-3 text-ink/50">{new Date(p.updated_at).toLocaleDateString()}</td>
                     <td className="px-4 py-3 text-right space-x-3 whitespace-nowrap">

@@ -119,7 +119,7 @@ export default function ResourcesAdmin() {
       </div>
 
       {showForm && (
-        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
+        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
           <h2 className="font-display text-lg text-green-deep">{editing ? 'Edit Resource' : 'New Resource'}</h2>
 
           <div>
@@ -154,7 +154,7 @@ export default function ResourcesAdmin() {
         {loading ? <Loading /> : resources.length === 0 ? (
           <EmptyState title="No resources yet" description="Add your first resource above." />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-white">
+          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-surface">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-sage-100 bg-sage-50 text-xs uppercase text-ink/50">
                 <tr>

@@ -69,7 +69,7 @@ export default function ExecutivesAdmin() {
       </div>
 
       {showForm && (
-        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle" onSubmit={handleSave}>
+        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle" onSubmit={handleSave}>
           <h2 className="font-display text-lg text-green-deep">{editing ? 'Edit Executive' : 'New Executive'}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -117,7 +117,7 @@ export default function ExecutivesAdmin() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {rows.map((e) => (
-              <div key={e.id} className="rounded-lg border border-sage-100 bg-white p-4 shadow-subtle">
+              <div key={e.id} className="rounded-lg border border-sage-100 bg-surface p-4 shadow-subtle">
                 <div className="flex items-center gap-3">
                   <img src={e.photo_url ?? '/logo.jpg'} alt={e.name} className="h-12 w-12 rounded-full object-cover" />
                   <div>

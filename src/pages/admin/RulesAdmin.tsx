@@ -72,7 +72,7 @@ export default function RulesAdmin() {
         ) : (
           <ul className="space-y-2">
             {rules.map((r, i) => (
-              <li key={r.id} className="flex items-center gap-3 rounded-lg border border-sage-100 bg-white p-3 shadow-subtle">
+              <li key={r.id} className="flex items-center gap-3 rounded-lg border border-sage-100 bg-surface p-3 shadow-subtle">
                 <div className="flex flex-col">
                   <button className="text-ink/30 hover:text-ink" disabled={i === 0} onClick={() => move(r, -1)}>▲</button>
                   <button className="text-ink/30 hover:text-ink" disabled={i === rules.length - 1} onClick={() => move(r, 1)}>▼</button>

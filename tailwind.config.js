@@ -1,28 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        ink: '#1C2321',
-        parchment: '#FAF8F2',
+        ink: 'rgb(var(--color-ink) / <alpha-value>)',
+        parchment: 'rgb(var(--color-background) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
         sage: {
-          50: '#F3F6F2',
-          100: '#E3EAE1',
-          200: '#C9D8C4',
-          300: '#A8C09F',
+          50: 'rgb(var(--color-sage-50) / <alpha-value>)',
+          100: 'rgb(var(--color-sage-100) / <alpha-value>)',
+          200: 'rgb(var(--color-sage-200) / <alpha-value>)',
+          300: 'rgb(var(--color-sage-300) / <alpha-value>)',
         },
         green: {
-          DEFAULT: '#1F5C4A',
-          deep: '#153F33',
-          mid: '#3E8E6E',
-          light: '#E9F1EC',
+          DEFAULT: 'rgb(var(--color-green) / <alpha-value>)',
+          deep: 'rgb(var(--color-green-deep) / <alpha-value>)',
+          mid: 'rgb(var(--color-green-mid) / <alpha-value>)',
+          light: 'rgb(var(--color-green-light) / <alpha-value>)',
         },
         gold: {
-          DEFAULT: '#B8862E',
-          light: '#F3E7CF',
+          DEFAULT: 'rgb(var(--color-gold) / <alpha-value>)',
+          light: 'rgb(var(--color-gold-light) / <alpha-value>)',
         },
-        clay: '#8C4A3A',
+        clay: 'rgb(var(--color-clay) / <alpha-value>)',
       },
       fontFamily: {
         display: ['Lora', 'ui-serif', 'Georgia', 'serif'],

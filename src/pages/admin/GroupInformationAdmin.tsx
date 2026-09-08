@@ -41,7 +41,7 @@ export default function GroupInformationAdmin() {
       <h1 className="text-xl">Group Information</h1>
       <p className="mt-1 text-sm text-ink/50">Edits here appear on the public About page.</p>
 
-      <form onSubmit={handleSave} className="mt-6 max-w-2xl space-y-5 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+      <form onSubmit={handleSave} className="mt-6 max-w-2xl space-y-5 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
         <div>
           <label className="field-label">Goal</label>
           <textarea rows={4} className="field-input" value={form.goal} onChange={(e) => setForm({ ...form, goal: e.target.value })} />

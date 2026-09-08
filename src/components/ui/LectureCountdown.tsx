@@ -75,4 +75,3 @@ export function LectureCountdown({ lecture }: { lecture: Lecture }) {
     </div>
   )
 }
-

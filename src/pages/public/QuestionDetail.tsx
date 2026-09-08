@@ -37,7 +37,7 @@ export default function QuestionDetail() {
       <div className="container-site py-12">
         <EmptyState title="This answer isn't available" description="It may not be published yet, or the link may be incorrect." />
         <div className="mt-6 text-center">
-          <Link to="/questions" className="text-sm font-medium text-green hover:underline">← Back to Islamic Questions</Link>
+          <Link to="/qa" className="text-sm font-medium text-green hover:underline">← Back to Q&A</Link>
         </div>
       </div>
     )
@@ -46,7 +46,7 @@ export default function QuestionDetail() {
   return (
     <div className="container-site py-12">
       <div className="mx-auto max-w-prose">
-        <Link to="/questions" className="text-sm font-medium text-green hover:underline">← Back to Islamic Questions</Link>
+        <Link to="/qa" className="text-sm font-medium text-green hover:underline">← Back to Q&A</Link>
 
         <p className="mt-6 text-xs font-medium uppercase tracking-wide text-ink/40">Question</p>
         <h1 className="mt-1 text-xl">{question.question}</h1>

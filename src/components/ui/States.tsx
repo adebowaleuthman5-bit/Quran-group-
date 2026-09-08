@@ -9,7 +9,7 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
 
 export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
-    <div className="rounded-lg border border-dashed border-sage-200 bg-white/60 px-6 py-14 text-center">
+    <div className="rounded-lg border border-dashed border-sage-200 bg-surface/60 px-6 py-14 text-center">
       <p className="font-display text-lg text-green-deep">{title}</p>
       {description && <p className="mt-2 text-sm text-ink/60">{description}</p>}
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useAuth } from '@/context/AuthContext'
 import { Loading, EmptyState } from '@/components/ui/States'
@@ -19,6 +19,8 @@ export default function LecturesAdmin() {
   const [showForm, setShowForm] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function load() {
     setLoading(true)
@@ -43,6 +45,23 @@ export default function LecturesAdmin() {
       poster_url: l.poster_url ?? '', test_info: l.test_info ?? '', lecture_status: l.lecture_status,
     })
     setSaveError(null); setShowForm(true)
+  }
+
+  async function handlePosterSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setSaveError(null)
+    const path = `lectures/${crypto.randomUUID()}-${file.name}`
+    const { error } = await supabase.storage.from('site-media').upload(path, file)
+    if (error) {
+      setSaveError(`Image upload failed: ${error.message}`)
+    } else {
+      const { data } = supabase.storage.from('site-media').getPublicUrl(path)
+      setForm((f) => ({ ...f, poster_url: data.publicUrl }))
+    }
+    setUploading(false)
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   async function handleSave(e: React.FormEvent, publish?: boolean) {
@@ -101,7 +120,7 @@ export default function LecturesAdmin() {
       </div>
 
       {showForm && (
-        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
+        <form className="mt-6 space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle" onSubmit={(e) => handleSave(e, undefined)}>
           <h2 className="font-display text-lg text-green-deep">{editing ? 'Edit Lecture' : 'New Lecture'}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -148,15 +167,26 @@ export default function LecturesAdmin() {
             <label className="field-label">Description</label>
             <textarea rows={3} className="field-input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="field-label">Recording / Audio URL (optional)</label>
-              <input className="field-input" value={form.recording_url} onChange={(e) => setForm({ ...form, recording_url: e.target.value })} />
-            </div>
-            <div>
-              <label className="field-label">Poster Image URL (optional)</label>
-              <input className="field-input" value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} />
-            </div>
+          <div>
+            <label className="field-label">Recording / Audio URL (optional)</label>
+            <input className="field-input" value={form.recording_url} onChange={(e) => setForm({ ...form, recording_url: e.target.value })} />
+          </div>
+          <div>
+            <label className="field-label">Poster Image (optional)</label>
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePosterSelect} className="field-input" />
+            {uploading && <p className="mt-1 text-xs text-ink/50">Uploading…</p>}
+            {form.poster_url && !uploading && (
+              <div className="mt-3">
+                <img src={form.poster_url} alt="Poster preview" className="h-32 rounded-md object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, poster_url: '' }))}
+                  className="mt-1 block text-xs text-clay hover:underline"
+                >
+                  Remove image
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <label className="field-label">Test Info (optional)</label>
@@ -164,8 +194,8 @@ export default function LecturesAdmin() {
           </div>
           {saveError && <p className="text-sm text-clay">{saveError}</p>}
           <div className="flex flex-wrap gap-3">
-            <button type="submit" disabled={saving} className="btn-secondary">Save Draft</button>
-            <button type="button" disabled={saving} onClick={(e) => handleSave(e as any, true)} className="btn-primary">Publish</button>
+            <button type="submit" disabled={saving || uploading} className="btn-secondary">Save Draft</button>
+            <button type="button" disabled={saving || uploading} onClick={(e) => handleSave(e as any, true)} className="btn-primary">Publish</button>
             <button type="button" onClick={() => setShowForm(false)} className="text-sm text-ink/50 hover:text-ink">Cancel</button>
           </div>
         </form>
@@ -175,7 +205,7 @@ export default function LecturesAdmin() {
         {loading ? <Loading /> : lectures.length === 0 ? (
           <EmptyState title="No lectures yet" description="Create your first lecture above." />
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-white">
+          <div className="overflow-x-auto rounded-lg border border-sage-100 bg-surface">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-sage-100 bg-sage-50 text-xs uppercase text-ink/50">
                 <tr>

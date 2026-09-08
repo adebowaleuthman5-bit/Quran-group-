@@ -31,7 +31,7 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-sage-50 px-4">
-      <div className="w-full max-w-sm rounded-lg border border-sage-100 bg-white p-8 shadow-subtle">
+      <div className="w-full max-w-sm rounded-lg border border-sage-100 bg-surface p-8 shadow-subtle">
         <div className="flex flex-col items-center text-center">
           <img src="/logo.jpg" alt="Logo" className="h-14 w-14 rounded-full object-cover" />
           <h1 className="mt-4 text-lg">Admin Login</h1>

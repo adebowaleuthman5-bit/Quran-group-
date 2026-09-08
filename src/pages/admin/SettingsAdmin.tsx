@@ -7,7 +7,7 @@ import type { SiteSettings } from '@/lib/types'
 export default function SettingsAdmin() {
   const { profile } = useAuth()
   const [row, setRow] = useState<SiteSettings | null>(null)
-  const [form, setForm] = useState({ site_name: '', intro_text: '', about_text: '' })
+  const [form, setForm] = useState({ site_name: '', intro_text: '', about_text: '', donation_text: '' })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -16,7 +16,7 @@ export default function SettingsAdmin() {
     supabase.from('site_settings').select('*').limit(1).maybeSingle().then(({ data }) => {
       const s = data as SiteSettings | null
       setRow(s)
-      if (s) setForm({ site_name: s.site_name, intro_text: s.intro_text ?? '', about_text: s.about_text ?? '' })
+      if (s) setForm({ site_name: s.site_name, intro_text: s.intro_text ?? '', about_text: s.about_text ?? '', donation_text: s.donation_text ?? '' })
       setLoading(false)
     })
   }, [])
@@ -41,7 +41,7 @@ export default function SettingsAdmin() {
       <h1 className="text-xl">Site Settings</h1>
       <p className="mt-1 text-sm text-ink/50">Signed in as {profile?.full_name} ({profile?.role.replace('_', ' ')})</p>
 
-      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
         <div>
           <label className="field-label">Site Name</label>
           <input className="field-input" value={form.site_name} onChange={(e) => setForm({ ...form, site_name: e.target.value })} />
@@ -54,6 +54,17 @@ export default function SettingsAdmin() {
           <label className="field-label">Short About Text (homepage preview)</label>
           <textarea rows={3} className="field-input" value={form.about_text} onChange={(e) => setForm({ ...form, about_text: e.target.value })} />
         </div>
+        <div>
+          <label className="field-label">Donation / Support Details (optional)</label>
+          <textarea
+            rows={4}
+            className="field-input"
+            value={form.donation_text}
+            onChange={(e) => setForm({ ...form, donation_text: e.target.value })}
+            placeholder="e.g. bank name, account name, account number, or any other way people can support the group"
+          />
+          <p className="mt-1 text-xs text-ink/40">Shown on the About page. Leave blank to hide the section.</p>
+        </div>
         <div className="flex items-center gap-3">
           <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving…' : 'Save'}</button>
           {saved && <span className="text-sm text-green">Saved.</span>}
@@ -61,7 +72,7 @@ export default function SettingsAdmin() {
       </form>
 
       {profile?.role === 'super_admin' && (
-        <div className="mt-8 max-w-xl rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+        <div className="mt-8 max-w-xl rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
           <h2 className="font-display text-lg text-green-deep">Admin Accounts</h2>
           <p className="mt-2 text-sm text-ink/60">
             To add or remove administrators, create or delete their user in Supabase Authentication, then add or

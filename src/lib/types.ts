@@ -1,6 +1,7 @@
 export type ContentStatus = 'draft' | 'published'
 export type QuestionStatus = 'pending' | 'under_review' | 'answered' | 'published' | 'rejected'
 export type AdminRole = 'super_admin' | 'admin'
+export type PostCategory = 'post' | 'verse' | 'dua' | 'adhkar'
 
 export interface Profile {
   id: string
@@ -15,6 +16,7 @@ export interface Post {
   title: string
   body: string
   image_url: string | null
+  category: PostCategory
   status: ContentStatus
   published_at: string | null
   created_by: string | null
@@ -125,6 +127,7 @@ export interface SiteSettings {
   site_name: string
   intro_text: string | null
   about_text: string | null
+  donation_text: string | null
   updated_at: string
 }
 

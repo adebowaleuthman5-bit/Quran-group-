@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
-import { useGroupInformation } from '@/lib/hooks'
+import { useGroupInformation, useSocialLinks, useSiteSettings } from '@/lib/hooks'
 import { Loading } from '@/components/ui/States'
 import { MihrabDivider } from '@/components/ui/MihrabDivider'
+import { FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/ui/SocialIcons'
 import type { Executive, Founder, GroupRule } from '@/lib/types'
 
 export default function About() {
@@ -11,6 +12,8 @@ export default function About() {
   }, [])
 
   const { data: info, loading: infoLoading } = useGroupInformation()
+  const { data: social } = useSocialLinks()
+  const { data: settings } = useSiteSettings()
   const [executives, setExecutives] = useState<Executive[]>([])
   const [founder, setFounder] = useState<Founder | null>(null)
   const [rules, setRules] = useState<GroupRule[]>([])
@@ -123,7 +126,7 @@ export default function About() {
             ) : (
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
                 {executives.map((ex) => (
-                  <div key={ex.id} className="rounded-lg border border-sage-100 bg-white p-5 text-center shadow-subtle">
+                  <div key={ex.id} className="rounded-lg border border-sage-100 bg-surface p-5 text-center shadow-subtle">
                     <img
                       src={ex.photo_url ?? '/logo.jpg'}
                       alt={ex.name}
@@ -141,6 +144,75 @@ export default function About() {
                 ))}
               </div>
             )}
+          </section>
+
+          {settings?.donation_text && (
+            <>
+              <MihrabDivider />
+              <section>
+                <h2 className="text-lg">Donation &amp; Support</h2>
+                <div className="mt-4 whitespace-pre-line rounded-lg border border-gold/30 bg-gold-light p-5 text-sm leading-relaxed text-ink/80">
+                  {settings.donation_text}
+                </div>
+              </section>
+            </>
+          )}
+
+          <MihrabDivider />
+
+          <section>
+            <h2 className="text-lg">Contact Us</h2>
+            <p className="mt-2 text-sm text-ink/60">Reach the group through WhatsApp or our official social media pages.</p>
+            <div className="mt-5 space-y-4">
+              {social?.whatsapp_general && (
+                <a href={social.whatsapp_general} target="_blank" rel="noopener noreferrer" className="btn-whatsapp block w-fit">
+                  Join Our WhatsApp Group
+                </a>
+              )}
+
+              <div className="flex gap-3">
+                {social?.facebook && (
+                  <a
+                    href={social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-sage-200 text-ink/60 transition-colors hover:border-green hover:text-green"
+                  >
+                    <FacebookIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {social?.instagram && (
+                  <a
+                    href={social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-sage-200 text-ink/60 transition-colors hover:border-green hover:text-green"
+                  >
+                    <InstagramIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {social?.tiktok && (
+                  <a
+                    href={social.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="TikTok"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-sage-200 text-ink/60 transition-colors hover:border-green hover:text-green"
+                  >
+                    <TikTokIcon className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
+
+              {(social?.email || social?.phone) && (
+                <div className="space-y-1 text-sm text-ink/80">
+                  {social.email && <p>Email: <a href={`mailto:${social.email}`} className="text-green hover:underline">{social.email}</a></p>}
+                  {social.phone && <p>Phone: {social.phone}</p>}
+                </div>
+              )}
+            </div>
           </section>
         </div>
       )}

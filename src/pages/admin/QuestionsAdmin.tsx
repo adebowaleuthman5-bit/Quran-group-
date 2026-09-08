@@ -111,7 +111,7 @@ export default function QuestionsAdmin() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${filter === f ? 'bg-green text-white' : 'bg-white text-ink/60 border border-sage-200'}`}
+            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${filter === f ? 'bg-green text-white' : 'bg-surface text-ink/60 border border-sage-200'}`}
           >
             {f.replace('_', ' ')}
           </button>
@@ -125,7 +125,7 @@ export default function QuestionsAdmin() {
           ) : (
             <ul className="space-y-3">
               {filtered.map((q) => (
-                <li key={q.id} className={`rounded-lg border bg-white p-4 shadow-subtle ${active?.id === q.id ? 'border-green' : 'border-sage-100'}`}>
+                <li key={q.id} className={`rounded-lg border bg-surface p-4 shadow-subtle ${active?.id === q.id ? 'border-green' : 'border-sage-100'}`}>
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm font-medium text-ink">{q.question}</p>
                     <StatusPill status={q.status} />
@@ -146,7 +146,7 @@ export default function QuestionsAdmin() {
 
         <div>
           {active ? (
-            <div className="rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+            <div className="rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
               <p className="text-xs font-medium uppercase tracking-wide text-ink/40">Question</p>
               <p className="mt-1 font-medium text-ink">{active.question}</p>
               {active.submitter_contact && <p className="mt-1 text-xs text-ink/40">Contact: {active.submitter_contact}</p>}

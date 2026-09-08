@@ -58,7 +58,7 @@ export default function Dashboard() {
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {cards.map((c) => (
-          <Link key={c.label} to={c.to} className="rounded-lg border border-sage-100 bg-white p-5 shadow-subtle hover:border-green/40">
+          <Link key={c.label} to={c.to} className="rounded-lg border border-sage-100 bg-surface p-5 shadow-subtle hover:border-green/40">
             <p className="text-2xl font-semibold text-green-deep">{c.value ?? '—'}</p>
             <p className="mt-1 text-sm text-ink/60">{c.label}</p>
           </Link>

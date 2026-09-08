@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabaseClient'
 import { Loading, EmptyState, ErrorState } from '@/components/ui/States'
 import { MihrabDivider } from '@/components/ui/MihrabDivider'
-import type { IslamicQuestion, QuestionAnswer } from '@/lib/types'
+import type { IslamicQuestion, QuestionAnswer, Resource } from '@/lib/types'
 
 const CATEGORIES = ['Aqeedah', 'Fiqh', 'Salah', 'Family', 'General', 'Other']
 
-export default function Questions() {
+export default function QA() {
   useEffect(() => {
-    document.title = 'Islamic Questions | Quran Recitation and Lectures Group'
+    document.title = 'Q&A | Quran Recitation and Lectures Group'
   }, [])
 
   const [question, setQuestion] = useState('')
@@ -45,11 +45,11 @@ export default function Questions() {
   return (
     <div className="container-site py-12">
       <header className="mx-auto max-w-prose text-center">
-        <h1 className="text-2xl">Islamic Questions</h1>
+        <h1 className="text-2xl">Q&amp;A</h1>
         <p className="mt-2 text-ink/60">Ask a question and it will be reviewed and answered by the group, in shā' Allāh.</p>
       </header>
 
-      <div className="mx-auto mt-8 max-w-prose rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+      <div className="mx-auto mt-8 max-w-prose rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
         {submitted ? (
           <div className="py-6 text-center">
             <p className="font-display text-lg text-green-deep">Your question has been received.</p>
@@ -97,6 +97,10 @@ export default function Questions() {
       <MihrabDivider />
 
       <PublishedAnswers />
+
+      <MihrabDivider />
+
+      <ResourceLibrary />
     </div>
   )
 }
@@ -148,6 +152,71 @@ function PublishedAnswers() {
             </li>
           ))}
         </ul>
+      )}
+    </section>
+  )
+}
+
+function fileKind(fileName: string) {
+  const ext = fileName.split('.').pop()?.toLowerCase() ?? ''
+  if (['pdf'].includes(ext)) return 'PDF'
+  if (['mp3', 'wav', 'm4a', 'ogg'].includes(ext)) return 'Audio'
+  if (['doc', 'docx'].includes(ext)) return 'Document'
+  if (['ppt', 'pptx'].includes(ext)) return 'Slides'
+  if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return 'Image'
+  return 'File'
+}
+
+function ResourceLibrary() {
+  const [resources, setResources] = useState<Resource[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    supabase
+      .from('resources')
+      .select('*')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (error) setError(error.message)
+        else setResources((data as Resource[]) ?? [])
+        setLoading(false)
+      })
+  }, [])
+
+  return (
+    <section className="mx-auto max-w-prose">
+      <h2 className="text-lg">Resource Library</h2>
+      <p className="mt-1 text-sm text-ink/60">Articles, lecture notes, and educational resources shared by the group.</p>
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <ErrorState message={error} />
+      ) : resources.length === 0 ? (
+        <EmptyState title="No resources yet" description="Check back soon for new material." />
+      ) : (
+        <div className="mt-4 space-y-4">
+          {resources.map((r) => (
+            <a
+              key={r.id}
+              href={r.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-4 rounded-lg border border-sage-100 bg-surface p-5 shadow-subtle transition-colors hover:border-green/40"
+            >
+              <span className="badge bg-green-light text-green-deep shrink-0">{fileKind(r.file_name)}</span>
+              <div className="min-w-0">
+                <p className="font-medium text-ink">{r.title}</p>
+                {r.description && <p className="mt-1 text-sm text-ink/60">{r.description}</p>}
+                <p className="mt-1 text-xs text-ink/40">
+                  {r.file_name}
+                  {r.published_at ? ` · ${new Date(r.published_at).toLocaleDateString()}` : ''}
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
       )}
     </section>
   )

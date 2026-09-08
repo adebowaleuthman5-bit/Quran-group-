@@ -48,7 +48,7 @@ export default function FounderAdmin() {
       <h1 className="text-xl">Founder</h1>
       <p className="mt-1 text-sm text-ink/50">This information appears on the public About page. Leave fields blank to hide the founder section.</p>
 
-      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-white p-6 shadow-subtle">
+      <form onSubmit={handleSave} className="mt-6 max-w-xl space-y-4 rounded-lg border border-sage-100 bg-surface p-6 shadow-subtle">
         <div>
           <label className="field-label">Name</label>
           <input className="field-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
