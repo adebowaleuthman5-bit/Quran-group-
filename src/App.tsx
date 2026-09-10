@@ -9,7 +9,10 @@ import QA from '@/pages/public/QA'
 import QuestionDetail from '@/pages/public/QuestionDetail'
 import LectureDetail from '@/pages/public/LectureDetail'
 import QuizTake from '@/pages/public/QuizTake'
+import More from '@/pages/public/More'
 import About from '@/pages/public/About'
+import Donation from '@/pages/public/Donation'
+import Settings from '@/pages/public/Settings'
 import NotFound from '@/pages/public/NotFound'
 
 import Login from '@/pages/admin/Login'
@@ -33,7 +36,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/daily-prayer" element={<DailyPrayer />} />
         <Route path="/qa" element={<QA />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/more" element={<More />} />
+        <Route path="/more/about" element={<About />} />
+        <Route path="/more/donation" element={<Donation />} />
+        <Route path="/more/settings" element={<Settings />} />
 
         {/* Unlisted, shareable detail pages — not in the main menu */}
         <Route path="/questions/:id" element={<QuestionDetail />} />

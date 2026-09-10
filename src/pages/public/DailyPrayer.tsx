@@ -1,22 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Coordinates, CalculationMethod, PrayerTimes as AdhanPrayerTimes } from 'adhan'
 import { Loading } from '@/components/ui/States'
+import { HijriCalendar } from '@/components/ui/HijriCalendar'
+import { getHijriLabel } from '@/lib/hijri'
 
 interface PrayerRow {
   name: string
   time: Date
-}
-
-function formatHijri(date: Date) {
-  try {
-    return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }).format(date)
-  } catch {
-    return null
-  }
 }
 
 export default function DailyPrayer() {
@@ -27,7 +17,7 @@ export default function DailyPrayer() {
   const [reminderMessage, setReminderMessage] = useState<string | null>(null)
 
   const today = new Date()
-  const hijriDate = formatHijri(today)
+  const hijriDate = getHijriLabel(today)
   const gregorianDate = today.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
   useEffect(() => {
@@ -139,6 +129,10 @@ export default function DailyPrayer() {
         <p className="mt-6 text-center text-xs text-ink/40">
           Reminders currently work while this page stays open in your browser. Real device notifications are coming soon.
         </p>
+      </div>
+
+      <div className="mx-auto mt-10 max-w-sm">
+        <HijriCalendar />
       </div>
     </div>
   )

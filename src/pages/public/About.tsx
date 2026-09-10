@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabaseClient'
-import { useGroupInformation, useSocialLinks, useSiteSettings } from '@/lib/hooks'
+import { useGroupInformation, useSocialLinks } from '@/lib/hooks'
 import { Loading } from '@/components/ui/States'
 import { MihrabDivider } from '@/components/ui/MihrabDivider'
 import { FacebookIcon, InstagramIcon, TikTokIcon } from '@/components/ui/SocialIcons'
@@ -13,7 +14,6 @@ export default function About() {
 
   const { data: info, loading: infoLoading } = useGroupInformation()
   const { data: social } = useSocialLinks()
-  const { data: settings } = useSiteSettings()
   const [executives, setExecutives] = useState<Executive[]>([])
   const [founder, setFounder] = useState<Founder | null>(null)
   const [rules, setRules] = useState<GroupRule[]>([])
@@ -34,7 +34,8 @@ export default function About() {
 
   return (
     <div className="container-site py-12">
-      <header className="mx-auto max-w-prose text-center">
+      <Link to="/more" className="text-sm font-medium text-green hover:underline">← Back to More</Link>
+      <header className="mx-auto mt-4 max-w-prose text-center">
         <h1 className="text-2xl">About the Group</h1>
       </header>
 
@@ -145,18 +146,6 @@ export default function About() {
               </div>
             )}
           </section>
-
-          {settings?.donation_text && (
-            <>
-              <MihrabDivider />
-              <section>
-                <h2 className="text-lg">Donation &amp; Support</h2>
-                <div className="mt-4 whitespace-pre-line rounded-lg border border-gold/30 bg-gold-light p-5 text-sm leading-relaxed text-ink/80">
-                  {settings.donation_text}
-                </div>
-              </section>
-            </>
-          )}
 
           <MihrabDivider />
 
